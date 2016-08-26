@@ -1,12 +1,20 @@
 {
   "name": "babili-webpack-plugin",
   "version": "0.0.0",
-  "description": "",
+  "description": "Babili Plugin for Webpack",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
+  "keywords": [
+    "webpack",
+    "webpack-plugin",
+    "babel",
+    "babili",
+    "minify"
+  ],
   "author": "boopathi",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.14.0",
+    "babel-preset-babili": "0.0.1",
+    "webpack-sources": "^0.1.2"
+  }
 }
