@@ -2,9 +2,9 @@
 
 This is a [webpack plugin](https://webpack.github.io/docs/using-plugins.html) for Babili.
 
-Babili - A babel based minifier - https://github.com/babel/babili
+Babili - A babel based minifier - https://github.com/babel/babilig
 
-[![Build Status](https://travis-ci.org/boopathi/babili-webpack-plugin.svg?branch=master)](https://travis-ci.org/boopathi/babili-webpack-plugin)
+[![Build Status](https://travis-ci.org/boopathi/babili-webpack-plugin.svg?branch=master)](https://travis-ci.org/boopathi/babili-webpack-plugin) [![npm version](https://badge.fury.io/js/babili-webpack-plugin.svg)](https://badge.fury.io/js/babili-webpack-plugin)
 
 ## Install
 
