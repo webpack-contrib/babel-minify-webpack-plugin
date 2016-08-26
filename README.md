@@ -17,7 +17,9 @@ npm install babili-webpack-plugin --save-dev
 ```js
 // webpack.config.js
 const BabiliPlugin = require("babili-webpack-plugin");
-{
+module.exports = {
+  entry: //...,
+  output: //...,
   plugins: [
     new BabiliPlugin()
   ]
