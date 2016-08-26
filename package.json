@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "description": "Babili Plugin for Webpack",
   "main": "index.js",
+  "scripts": {
+    "lint": "eslint *.js",
+    "fix": "eslint *.js --fix"
+  },
   "keywords": [
     "webpack",
     "webpack-plugin",
@@ -16,5 +20,8 @@
     "babel-core": "^6.14.0",
     "babel-preset-babili": "0.0.1",
     "webpack-sources": "^0.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.3.1"
   }
 }

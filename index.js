@@ -45,7 +45,7 @@ module.exports = class BabiliPlugin {
                 return;
               }
 
-              let input, inputSourceMap, sourceMap;
+              let input, inputSourceMap;
 
               if (useSourceMap) {
                 if (asset.sourceAndMap) {
@@ -71,7 +71,7 @@ module.exports = class BabiliPlugin {
               });
 
               asset.__babilified = compilation.assets[file] = (
-                true
+                result.map
                 ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap)
                 : new RawSource(result.code)
               );
