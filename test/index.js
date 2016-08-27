@@ -2,46 +2,50 @@ const path = require("path");
 const fs = require("fs");
 const expect = require("expect");
 const webpack = require("webpack");
+const rimraf = require("rimraf");
 const {SourceMapConsumer} = require("source-map");
 
 const BabiliPlugin = require("../");
-
-const config = {
-  entry: path.join(__dirname, "resources/app.js"),
-  output: {
-    filename: "bundle.js",
-    path: path.join(__dirname, "build")
-  },
-  plugins: [
-    new BabiliPlugin()
-  ],
-  devtool: "sourcemap"
-}
+const buildDir = path.join(__dirname, "build");
 
 describe("babili-webpack-plugin", function () {
-  const result = run();
-
-  it("should run and minify", function (done) {
-    result
-      .then(stats => done())
-      .catch(err => done(err));
+  afterEach(function () {
+    rimraf.sync(buildDir);
   });
 
-  it("should have sourcemaps with correct filenames", function (done) {
-    result
-      .then(() => {
-        const src = sources().map(s => s.replace("webpack:///", ""));
-        expect(src).toInclude("test/resources/a.js");
-        expect(src).toInclude("test/resources/b.js");
-        expect(src).toInclude("test/resources/app.js");
+  describe("sourcemaps", function () {
+    before(function(done) {
+      run().then(() => done()).catch(err => done(err));
+    });
+
+    it("should have sourcemaps with correct filenames", function () {
+      const src = sources().map(s => s.replace("webpack:///", ""));
+      expect(src).toInclude("test/resources/a.js");
+      expect(src).toInclude("test/resources/b.js");
+      expect(src).toInclude("test/resources/app.js");
+    });
+  });
+
+  describe("options", function () {
+    afterEach(function () {
+      rimraf.sync(buildDir);
+    });
+
+    it("should disable sourcemap when devtool is not present", function (done) {
+      run({
+        devtool: void 0
+      }).then(() => {
+        expect(isExists(path.join(buildDir, "bundle.js"))).toEqual(true);
+        expect(isExists(path.join(buildDir, "bundle.js.map"))).toEqual(false);
         done();
-      })
-      .catch(err => done(err));
+      }).catch(e => done(e));
+    });
+
   });
 });
 
-function run() {
-  const compiler = webpack(config);
+function run(opts) {
+  const compiler = webpack(getConfig(opts));
   return new Promise((resolve, reject) => {
     compiler.run(function (err, stats) {
       if (err) return reject(err);
@@ -56,4 +60,27 @@ function sources() {
   );
   const smc = new SourceMapConsumer(map);
   return smc.sources;
+}
+
+function isExists(file) {
+  try {
+    fs.statSync(file);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function getConfig(opts = {}) {
+  return {
+    entry: path.join(__dirname, "resources/app.js"),
+    output: {
+      filename: "bundle.js",
+      path: path.join(__dirname, "build")
+    },
+    plugins: [
+      new BabiliPlugin(opts)
+    ],
+    devtool: opts.hasOwnProperty("devtool") ? opts.devtool : "sourcemap"
+  }
 }

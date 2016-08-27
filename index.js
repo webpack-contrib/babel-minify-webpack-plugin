@@ -66,7 +66,7 @@ module.exports = class BabiliPlugin {
                 sourceMaps: useSourceMap,
                 inputSourceMap,
                 shouldPrintComment(contents) {
-                  return commentsRegex.test(contents);
+                  return shouldPrintComment(contents, commentsRegex);
                 }
               });
 
@@ -85,3 +85,11 @@ module.exports = class BabiliPlugin {
     });
   }
 };
+
+function shouldPrintComment(contents, checker) {
+  switch (typeof checker) {
+    case "function": return checker(contents);
+    case "object": return checker.test(contents);
+    default: return !!checker;
+  }
+}

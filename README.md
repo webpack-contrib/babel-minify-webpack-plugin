@@ -25,10 +25,16 @@ module.exports = {
   entry: //...,
   output: //...,
   plugins: [
-    new BabiliPlugin()
+    new BabiliPlugin(options)
   ]
 }
 ```
+
+## Options
+
++ `test`: JS file extension regex. Default: `/\.js($|\?)/i`
++ `comments`: Preserve Comments. Default: `/@preserve|@license/`. falsy value to remove all comments. Accepts function, object with property test (regex), and values.
++ `sourceMap`: Default: uses [webpackConfig.devtool](https://webpack.github.io/docs/configuration.html#devtool). Set this to override that.
 
 ## LICENSE
 
