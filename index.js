@@ -88,8 +88,8 @@ module.exports = class BabiliPlugin {
 
 function shouldPrintComment(contents, checker) {
   switch (typeof checker) {
-    case "function": return checker(contents);
-    case "object": return checker.test(contents);
-    default: return !!checker;
+  case "function": return checker(contents);
+  case "object": return checker.test(contents);
+  default: return !!checker;
   }
 }
