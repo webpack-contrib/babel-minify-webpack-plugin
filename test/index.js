@@ -3,7 +3,7 @@ const fs = require("fs");
 const expect = require("expect");
 const webpack = require("webpack");
 const rimraf = require("rimraf");
-const {SourceMapConsumer} = require("source-map");
+const SourceMapConsumer = require("source-map").SourceMapConsumer;
 
 const BabiliPlugin = require("../");
 const buildDir = path.join(__dirname, "build");
