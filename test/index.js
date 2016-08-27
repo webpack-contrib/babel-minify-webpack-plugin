@@ -8,6 +8,10 @@ const {SourceMapConsumer} = require("source-map");
 const BabiliPlugin = require("../");
 const buildDir = path.join(__dirname, "build");
 
+const preserveRegexp = /\/\*.*@preserve.*\*\//;
+const licenseRegexp = /\/\*.*@license.*\*\//;
+const hmmRegexp = /\/\*.*Hmm.*\*\//;
+
 describe("babili-webpack-plugin", function () {
   afterEach(function () {
     rimraf.sync(buildDir);
@@ -15,7 +19,9 @@ describe("babili-webpack-plugin", function () {
 
   describe("sourcemaps", function () {
     before(function(done) {
-      run().then(() => done()).catch(err => done(err));
+      run({
+        devtool: "sourcemap"
+      }).then(() => done()).catch(err => done(err));
     });
 
     it("should have sourcemaps with correct filenames", function () {
@@ -41,6 +47,30 @@ describe("babili-webpack-plugin", function () {
       }).catch(e => done(e));
     });
 
+    it("should accept a regex as comments test", function (done) {
+      run({
+        comments: /@preserve/
+      }).then(() => {
+        const output = getFile("bundle.js");
+        expect(output).toMatch(preserveRegexp);
+        expect(output).toNotMatch(licenseRegexp);
+        done();
+      }).catch(e => done(e));
+    });
+
+    it("should accept function as comments test", function (done) {
+      run({
+        comments(comment) {
+          return comment.indexOf("Hmm") !== -1;
+        }
+      }).then(() => {
+        const output = getFile("bundle.js");
+        expect(output).toNotMatch(preserveRegexp);
+        expect(output).toNotMatch(licenseRegexp);
+        expect(output).toMatch(hmmRegexp);
+        done();
+      }).catch(e => done(e));
+    });
   });
 });
 
@@ -56,7 +86,7 @@ function run(opts) {
 
 function sources() {
   const map = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "build/bundle.js.map"))
+    getFile("bundle.js.map")
   );
   const smc = new SourceMapConsumer(map);
   return smc.sources;
@@ -71,6 +101,10 @@ function isExists(file) {
   }
 }
 
+function getFile(file) {
+  return fs.readFileSync(path.join(buildDir, file)).toString();
+}
+
 function getConfig(opts = {}) {
   return {
     entry: path.join(__dirname, "resources/app.js"),
@@ -81,6 +115,6 @@ function getConfig(opts = {}) {
     plugins: [
       new BabiliPlugin(opts)
     ],
-    devtool: opts.hasOwnProperty("devtool") ? opts.devtool : "sourcemap"
+    devtool: opts.devtool ? opts.devtool : void 0
   }
 }
