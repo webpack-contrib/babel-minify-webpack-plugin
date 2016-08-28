@@ -1,9 +1,11 @@
+"use strict";
+
 const path = require("path");
 const fs = require("fs");
 const expect = require("expect");
 const webpack = require("webpack");
 const rimraf = require("rimraf");
-const SourceMapConsumer = require("source-map").SourceMapConsumer;
+const {SourceMapConsumer} = require("source-map");
 
 const BabiliPlugin = require("../");
 const buildDir = path.join(__dirname, "build");
@@ -105,7 +107,9 @@ function getFile(file) {
   return fs.readFileSync(path.join(buildDir, file)).toString();
 }
 
-function getConfig(opts = {}) {
+function getConfig(opts) {
+  if (typeof opts === "undefined") opts = {};
+
   return {
     entry: path.join(__dirname, "resources/app.js"),
     output: {
