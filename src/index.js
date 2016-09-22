@@ -61,14 +61,14 @@ module.exports = class BabiliPlugin {
               }
 
               // do the transformation
-              const result = babel.transform(input, {
+              const result = babel.transform(input, Object.assign({
                 presets: [babiliPreset],
                 sourceMaps: useSourceMap,
                 inputSourceMap,
                 shouldPrintComment(contents) {
                   return shouldPrintComment(contents, commentsRegex);
                 }
-              });
+              }, options.transform || {} ));
 
               asset.__babilified = compilation.assets[file] = (
                 result.map
