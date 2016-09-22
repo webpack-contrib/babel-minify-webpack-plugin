@@ -64,6 +64,7 @@ module.exports = class BabiliPlugin {
               const result = babel.transform(input, {
                 presets: [babiliPreset],
                 sourceMaps: useSourceMap,
+                babelrc: false,
                 inputSourceMap,
                 shouldPrintComment(contents) {
                   return shouldPrintComment(contents, commentsRegex);
