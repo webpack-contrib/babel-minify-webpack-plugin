@@ -11,6 +11,7 @@ module.exports = class BabiliPlugin {
 
   apply(compiler) {
     const options = this.options;
+
     const jsregex = options.test || /\.js($|\?)/i;
     const commentsRegex = typeof options.comments === "undefined"
       ? /@preserve|@license/
@@ -19,6 +20,9 @@ module.exports = class BabiliPlugin {
     const useSourceMap = typeof options.sourceMap === "undefined"
       ? !!compiler.options.devtool
       : options.sourceMap;
+
+    const _babel = this.options.babel || babel;
+    const _babili = this.options.babili || babiliPreset;
 
     compiler.plugin("compilation", function (compilation) {
       if (useSourceMap) {
@@ -63,8 +67,8 @@ module.exports = class BabiliPlugin {
               }
 
               // do the transformation
-              const result = babel.transform(input, {
-                presets: [babiliPreset],
+              const result = _babel.transform(input, {
+                presets: [_babili],
                 sourceMaps: useSourceMap,
                 babelrc: false,
                 inputSourceMap,
