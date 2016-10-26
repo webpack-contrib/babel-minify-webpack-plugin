@@ -1,3 +1,4 @@
 .eslintrc.js
 .travis.yml
 test
+.vscode
