@@ -1,6 +1,6 @@
 {
   "name": "babili-webpack-plugin",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Babili Plugin for Webpack",
   "main": "lib/index.js",
   "scripts": {
