@@ -42,4 +42,4 @@ module.exports = {
 
 MIT
 
-https://boopathi.mit-license.org
+https://boopathi.mit-license.org/2016
