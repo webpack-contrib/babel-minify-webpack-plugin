@@ -41,7 +41,7 @@ module.exports = {
 
 ## Why?
 
-You can also use [babel-loader](https://github.com/babel/babel-loader) for webpack and include `babili` [as a preset](https://github.com/babel/babili#babel-preset) and should be much faster than using this, as babili operates on smaller file sizes. But then, why does this plugin exist at all? -
+You can also use [babel-loader](https://github.com/babel/babel-loader) for webpack and include `babili` [as a preset](https://github.com/babel/babili#babel-preset) and should be much faster than using this - as babili will operate on smaller file sizes. But then, why does this plugin exist at all? -
 
 + A webpack loader operates on single files and babili preset as a webpack loader is going to consider each file to be executed directly in the browser global scope (by default) and will not optimize some things in the toplevel scope. This is going to change and you can opt-in to optimize toplevel scope - #210, #203, etc...
 + When you exclude `node_modules` from being run through the babel-loader, babili optimizations are not applied to the excluded files as it doesn't pass through the minifier.
