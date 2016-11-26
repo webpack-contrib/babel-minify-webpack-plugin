@@ -1,24 +1,13 @@
 ---
-git:
-  depth: 1
 sudo: false
 language: node_js
-cache:
-  directories:
-  - node_modules
-  - $(npm root -g)
+cache: yarn
 
 node_js:
 - '6'
 - '5'
 
-before_install:
-- npm install -g yarn
-
-install:
-- yarn
-
 script:
-- npm run build
-- npm run lint
-- npm test
+- yarn run lint
+- yarn run build
+- yarn test
