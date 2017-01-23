@@ -1,6 +1,6 @@
 # babili-webpack-plugin
 
-This is a [webpack plugin](https://webpack.github.io/docs/using-plugins.html) for Babili.
+This is a [webpack plugin](https://webpack.js.org/configuration/plugins/) for Babili.
 
 Babili - A babel based minifier - https://github.com/babel/babili
 
@@ -34,7 +34,7 @@ module.exports = {
 ## Options
 
 + `test`: JS file extension regex. Default: `/\.js($|\?)/i`
-+ `comments`: Preserve Comments. Default: `/@preserve|@license/`. falsy value to remove all comments. Accepts function, object with property test (regex), and values.
++ `comments`: Preserve Comments. Default: `/@preserve|@licen(s|c)e/`. falsy value to remove all comments. Accepts function, object with property test (regex), and values.
 + `sourceMap`: Default: uses [webpackConfig.devtool](https://webpack.github.io/docs/configuration.html#devtool). Set this to override that.
 + `babel`: Pass in a custom babel-core instead. `require("babel-core")`
 + `babili`: Pass in a custom babili preset instead - `require("babel-preset-babili")`.
