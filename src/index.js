@@ -14,7 +14,7 @@ module.exports = class BabiliPlugin {
 
     const jsregex = options.test || /\.js($|\?)/i;
     const commentsRegex = typeof options.comments === "undefined"
-      ? /@preserve|@license/
+      ? /@preserve|@licen(s|c)e/
       : options.comments;
 
     const useSourceMap = typeof options.sourceMap === "undefined"
