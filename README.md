@@ -26,12 +26,18 @@ module.exports = {
   entry: //...,
   output: //...,
   plugins: [
-    new BabiliPlugin(options)
+    new BabiliPlugin(babiliOptions, overrides)
   ]
 }
 ```
 
 ## Options
+
+#### babiliOptions
+
+babiliOptions are passed along to the babili preset. Check https://github.com/babel/babili/tree/master/packages/babel-preset-babili#options. `Default: {}`.
+
+#### Overrides
 
 + `test`: JS file extension regex. Default: `/\.js($|\?)/i`
 + `comments`: Preserve Comments. Default: `/@preserve|@licen(s|c)e/`. falsy value to remove all comments. Accepts function, object with property test (regex), and values.
