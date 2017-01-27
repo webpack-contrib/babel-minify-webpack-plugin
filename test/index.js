@@ -117,7 +117,7 @@ function getConfig(opts) {
       path: path.join(__dirname, "build")
     },
     plugins: [
-      new BabiliPlugin(opts)
+      new BabiliPlugin({}, opts)
     ],
     devtool: opts.devtool ? opts.devtool : void 0
   }
