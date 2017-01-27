@@ -5,12 +5,13 @@ const babiliPreset = require("babel-preset-babili");
 const {SourceMapSource, RawSource} = require("webpack-sources");
 
 module.exports = class BabiliPlugin {
-  constructor(options = {}) {
+  constructor(babiliOpts = {}, options = {}) {
+    this.babiliOpts = babiliOpts;
     this.options = options;
   }
 
   apply(compiler) {
-    const options = this.options;
+    const {babiliOpts, options} = this;
 
     const jsregex = options.test || /\.js($|\?)/i;
     const commentsRegex = typeof options.comments === "undefined"
@@ -68,7 +69,7 @@ module.exports = class BabiliPlugin {
 
               // do the transformation
               const result = _babel.transform(input, {
-                presets: [_babili],
+                presets: [[_babili, babiliOpts]],
                 sourceMaps: useSourceMap,
                 babelrc: false,
                 inputSourceMap,
