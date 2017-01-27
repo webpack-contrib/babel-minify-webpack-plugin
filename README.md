@@ -35,7 +35,7 @@ module.exports = {
 
 #### babiliOptions
 
-babiliOptions are passed along to the babili preset. Check https://github.com/babel/babili/tree/master/packages/babel-preset-babili#options. `Default: {}`.
+babiliOptions are passed on to the babili preset. Check https://github.com/babel/babili/tree/master/packages/babel-preset-babili#options. `Default: {}`.
 
 #### Overrides
 
