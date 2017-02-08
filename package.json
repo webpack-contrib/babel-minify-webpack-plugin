@@ -21,7 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-core": "^6.22.1",
-    "babel-preset-babili": "^0.0.10",
+    "babel-preset-babili": "^0.0.11",
     "webpack-sources": "^0.1.4"
   },
   "devDependencies": {
