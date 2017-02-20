@@ -1,5 +1,7 @@
 # babili-webpack-plugin
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/boopathi/babili-webpack-plugin.svg)](https://greenkeeper.io/)
+
 This is a [webpack plugin](https://webpack.js.org/configuration/plugins/) for Babili.
 
 Babili - A babel based minifier - https://github.com/babel/babili
