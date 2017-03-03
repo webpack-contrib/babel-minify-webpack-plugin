@@ -21,17 +21,17 @@
   "author": "boopathi",
   "license": "MIT",
   "dependencies": {
-    "babel-core": "^6.22.1",
-    "babel-preset-babili": "^0.0.11",
+    "babel-core": "^6.23.1",
+    "babel-preset-babili": "^0.0.12",
     "webpack-sources": "^0.1.4"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-preset-env": "^1.1.8",
-    "eslint": "^3.14.0",
+    "babel-cli": "^6.23.0",
+    "babel-preset-env": "^1.1.11",
+    "eslint": "^3.17.0",
     "expect": "^1.20.2",
     "mocha": "^3.2.0",
-    "rimraf": "^2.5.4",
+    "rimraf": "^2.6.1",
     "source-map": "^0.5.6",
     "webpack": "^2.2.1"
   }
