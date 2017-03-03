@@ -17,6 +17,7 @@
     "babili",
     "minify"
   ],
+  "repository": "https://github.com/webpack-contrib/babili-webpack-plugin",
   "author": "boopathi",
   "license": "MIT",
   "dependencies": {
