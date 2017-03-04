@@ -12,7 +12,7 @@
       src="https://cdn.rawgit.com/webpack/media/e7485eb2/logo/icon.svg">
   </a>
   <h1>Babili Webpack Plugin</h1>
-  <p>A Webpack Plugin for Babili - A babel based minifier<p>
+  <p>A Webpack Plugin for [Babili](https://github.com/babel/babili) - A babel based minifier<p>
 </div>
 
 <h2 align="center">Install</h2>
