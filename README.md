@@ -66,7 +66,7 @@ You can also use [babel-loader](https://github.com/babel/babel-loader) for webpa
     <tr>
       <td align="center">
         <img width="150" height="150"
-        src="https://avatars.githubusercontent.com/u/5419992?v=3&s=150">
+        src="https://avatars2.githubusercontent.com/u/294474?v=3&s=150">
         </br>
         <a href="https://github.com/boopathi">Boopathi Rajaa</a>
       </td>
