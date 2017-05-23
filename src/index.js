@@ -24,6 +24,7 @@ module.exports = class BabiliPlugin {
 
     const _babel = this.options.babel || babel;
     const _babili = this.options.babili || babiliPreset;
+    const parserOpts = this.options.parserOpts || {};
 
     compiler.plugin("compilation", function (compilation) {
       if (useSourceMap) {
@@ -69,6 +70,7 @@ module.exports = class BabiliPlugin {
 
               // do the transformation
               const result = _babel.transform(input, {
+                parserOpts,
                 presets: [[_babili, babiliOpts]],
                 sourceMaps: useSourceMap,
                 babelrc: false,
