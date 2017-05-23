@@ -2,7 +2,6 @@
 
 const babel = require("babel-core");
 const babiliPreset = require("babel-preset-babili");
-const dynamicSyntaxPlugin = require("babel-plugin-syntax-dynamic-import");
 const {SourceMapSource, RawSource} = require("webpack-sources");
 
 module.exports = class BabiliPlugin {
@@ -25,6 +24,8 @@ module.exports = class BabiliPlugin {
 
     const _babel = this.options.babel || babel;
     const _babili = this.options.babili || babiliPreset;
+    const parserOpts = this.options.parserOpts || {};
+    const plugins = this.options.plugins || [];
 
     compiler.plugin("compilation", function (compilation) {
       if (useSourceMap) {
@@ -70,8 +71,9 @@ module.exports = class BabiliPlugin {
 
               // do the transformation
               const result = _babel.transform(input, {
+                parserOpts,
                 presets: [[_babili, babiliOpts]],
-                plugins: [dynamicSyntaxPlugin],
+                plugins,
                 sourceMaps: useSourceMap,
                 babelrc: false,
                 inputSourceMap,
