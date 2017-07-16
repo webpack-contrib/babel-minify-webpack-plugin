@@ -5,9 +5,9 @@ const fs = require("fs");
 const expect = require("expect");
 const webpack = require("webpack");
 const rimraf = require("rimraf");
-const {SourceMapConsumer} = require("source-map");
+const { SourceMapConsumer } = require("source-map");
 
-const BabiliPlugin = require("../");
+const BabiliPlugin = require("../src/index");
 const buildDir = path.join(__dirname, "build");
 
 const preserveRegexp = /\/\*.*@preserve.*\*\//;
@@ -20,7 +20,7 @@ describe("babili-webpack-plugin", function () {
   });
 
   describe("sourcemaps", function () {
-    before(function(done) {
+    beforeAll(function (done) {
       run({
         devtool: "sourcemap"
       }).then(() => done()).catch(err => done(err));
