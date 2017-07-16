@@ -1,72 +1,71 @@
-"use strict";
+/* eslint-disable no-undefined */
+import path from 'path';
+import fs from 'fs';
+import expect from 'expect';
+import webpack from 'webpack';
+import rimraf from 'rimraf';
+import { SourceMapConsumer } from 'source-map';
+import BabiliPlugin from '../src/index';
 
-const path = require("path");
-const fs = require("fs");
-const expect = require("expect");
-const webpack = require("webpack");
-const rimraf = require("rimraf");
-const { SourceMapConsumer } = require("source-map");
-
-const BabiliPlugin = require("../src/index");
-const buildDir = path.join(__dirname, "build");
+const buildDir = path.join(__dirname, 'build');
 
 const preserveRegexp = /\/\*.*@preserve.*\*\//;
 const licenseRegexp = /\/\*.*@license.*\*\//;
 const hmmRegexp = /\/\*.*Hmm.*\*\//;
 
-describe("babili-webpack-plugin", function () {
-  afterEach(function () {
+describe('babili-webpack-plugin', () => {
+  afterEach(() => {
     rimraf.sync(buildDir);
   });
 
-  describe("sourcemaps", function () {
-    beforeAll(function (done) {
+  describe('sourcemaps', () => {
+    beforeAll((done) => {
       run({
-        devtool: "sourcemap"
+        devtool: 'sourcemap',
       }).then(() => done()).catch(err => done(err));
     });
 
-    it("should have sourcemaps with correct filenames", function () {
-      const src = sources().map(s => s.replace("webpack:///", ""));
-      expect(src).toInclude("test/resources/a.js");
-      expect(src).toInclude("test/resources/b.js");
-      expect(src).toInclude("test/resources/app.js");
+    it('should have sourcemaps with correct filenames', () => {
+      const src = sources().map(s => s.replace('webpack:///', ''));
+      expect(src).toInclude('test/resources/a.js');
+      expect(src).toInclude('test/resources/b.js');
+      expect(src).toInclude('test/resources/app.js');
     });
   });
 
-  describe("options", function () {
-    afterEach(function () {
+  describe('options', () => {
+    afterEach(() => {
       rimraf.sync(buildDir);
     });
 
-    it("should disable sourcemap when devtool is not present", function (done) {
+    it('should disable sourcemap when devtool is not present', (done) => {
       run({
-        devtool: void 0
+        devtool: undefined,
       }).then(() => {
-        expect(isExists(path.join(buildDir, "bundle.js"))).toEqual(true);
-        expect(isExists(path.join(buildDir, "bundle.js.map"))).toEqual(false);
+        expect(isExists(path.join(buildDir, 'bundle.js'))).toEqual(true);
+        expect(isExists(path.join(buildDir, 'bundle.js.map'))).toEqual(false);
         done();
       }).catch(e => done(e));
     });
 
-    it("should accept a regex as comments test", function (done) {
+    it('should accept a regex as comments test', (done) => {
       run({
-        comments: /@preserve/
+        comments: /@preserve/,
       }).then(() => {
-        const output = getFile("bundle.js");
+        const output = getFile('bundle.js');
         expect(output).toMatch(preserveRegexp);
         expect(output).toNotMatch(licenseRegexp);
         done();
       }).catch(e => done(e));
     });
 
-    it("should accept function as comments test", function (done) {
+    it('should accept function as comments test', (done) => {
       run({
         comments(comment) {
-          return comment.indexOf("Hmm") !== -1;
-        }
+          return comment.includes('Hmm');
+        },
       }).then(() => {
-        const output = getFile("bundle.js");
+        const output = getFile('bundle.js');
         expect(output).toNotMatch(preserveRegexp);
         expect(output).toNotMatch(licenseRegexp);
         expect(output).toMatch(hmmRegexp);
@@ -79,7 +78,7 @@ describe("babili-webpack-plugin", function () {
 function run(opts) {
   const compiler = webpack(getConfig(opts));
   return new Promise((resolve, reject) => {
-    compiler.run(function (err, stats) {
+    compiler.run((err, stats) => {
       if (err) return reject(err);
       resolve(stats);
     });
@@ -88,7 +87,7 @@ function run(opts) {
 
 function sources() {
   const map = JSON.parse(
-    getFile("bundle.js.map")
+    getFile('bundle.js.map'),
   );
   const smc = new SourceMapConsumer(map);
   return smc.sources;
@@ -108,17 +107,17 @@ function getFile(file) {
 }
 
 function getConfig(opts) {
-  if (typeof opts === "undefined") opts = {};
+  if (typeof opts === 'undefined') opts = {};
 
   return {
-    entry: path.join(__dirname, "resources/app.js"),
+    entry: path.join(__dirname, 'resources/app.js'),
     output: {
-      filename: "bundle.js",
-      path: path.join(__dirname, "build")
+      filename: 'bundle.js',
+      path: path.join(__dirname, 'build'),
     },
     plugins: [
-      new BabiliPlugin({}, opts)
+      new BabiliPlugin({}, opts),
     ],
-    devtool: opts.devtool ? opts.devtool : void 0
-  }
+    devtool: opts.devtool ? opts.devtool : undefined,
+  };
 }
