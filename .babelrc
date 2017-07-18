@@ -3,14 +3,6 @@
     [
       "env",
       {
-        "targets": {
-          "node": 4
-        }
-      }
-    ],
-    [
-      "env",
-      {
         "useBuiltIns": true,
         "targets": {
           "node": "4.3"
