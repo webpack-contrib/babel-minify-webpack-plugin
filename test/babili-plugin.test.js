@@ -1,7 +1,6 @@
 /* eslint-disable no-undefined */
 import path from 'path';
 import fs from 'fs';
-import expect from 'expect';
 import webpack from 'webpack';
 import rimraf from 'rimraf';
 import { SourceMapConsumer } from 'source-map';
@@ -27,9 +26,9 @@ describe('babili-webpack-plugin', () => {
 
     it('should have sourcemaps with correct filenames', () => {
       const src = sources().map(s => s.replace('webpack:///', ''));
-      expect(src).toInclude('test/resources/a.js');
-      expect(src).toInclude('test/resources/b.js');
-      expect(src).toInclude('test/resources/app.js');
+      expect(src).toContain('test/resources/app.js');
+      expect(src).toContain('test/resources/a.js');
+      expect(src).toContain('test/resources/b.js');
     });
   });
 
