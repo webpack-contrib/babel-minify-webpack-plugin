@@ -51,6 +51,7 @@ module.exports = {
 + `parserOpts`: Configure babel with special parser options.
 + `babel`: Pass in a custom babel-core instead. `require("babel-core")`
 + `babili`: Pass in a custom babili preset instead - `require("babel-preset-babili")`.
++ `minify`: Disable minifier (for use in development only)
 ``
 
 <h2 align="center">Why</h2>

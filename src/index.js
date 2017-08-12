@@ -11,6 +11,10 @@ export default class BabiliPlugin {
   apply(compiler) {
     const { babiliOpts, options } = this;
 
+    if (options.minify === false) {
+      return;
+    }
+
     const jsregex = options.test || /\.js($|\?)/i;
     const commentsRegex = typeof options.comments === 'undefined' ? /@preserve|@licen(s|c)e/ : options.comments;
 
