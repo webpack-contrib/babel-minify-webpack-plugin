@@ -57,13 +57,20 @@
     "webpack": "^3.3.0",
     "webpack-defaults": "^1.5.0"
   },
-  "repository": "https://github.com/webpack-contrib/babili-webpack-plugin",
   "engines": {
     "node": ">= 4.3 < 5.0.0 || >= 5.10"
   },
   "peerDependencies": {
     "webpack": "^2.0.0 || ^3.0.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webpack-contrib/babili-webpack-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/webpack-contrib/babili-webpack-plugin/issues"
+  },
+  "homepage": "https://github.com/webpack-contrib/babili-webpack-plugin",
   "keywords": [
     "webpack",
     "webpack-plugin",
