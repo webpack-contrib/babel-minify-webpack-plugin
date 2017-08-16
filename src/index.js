@@ -1,27 +1,39 @@
 import babel from 'babel-core';
-import minifyPreset from 'babel-preset-minify';
+import babelPresetMinify from 'babel-preset-minify';
 import { SourceMapSource, RawSource } from 'webpack-sources';
 
+// alias for undefined / void 0 :(
+// because of these eslint rules in webpack-defaults
+// 1. no-void
+// 2. no-undefined
+let undef;
+
+function getDefault(actualValue, defaultValue) {
+  return actualValue !== undef ? actualValue : defaultValue;
+}
+
 export default class BabelMinifyPlugin {
-  constructor(minifyOpts = {}, options = {}) {
-    this.minifyOpts = minifyOpts;
-    this.options = options;
+  constructor(minifierOpts = {}, pluginOpts = {}) {
+    this.options = {
+      parserOpts: pluginOpts.parserOpts || {},
+      minifyPreset: pluginOpts.minifyPreset || babelPresetMinify,
+      minifierOpts,
+      babel: pluginOpts.babel || babel,
+      comments: getDefault(pluginOpts.comments, /^\**!|@preserve|@license|@cc_on/),
+      // compiler.options.devtool overrides options.sourceMap if NOT set
+      // so we set it to undefined/void 0 as the default value
+      sourceMap: getDefault(pluginOpts.sourceMap, undef),
+      jsregex: pluginOpts.jsregex || /\.js($|\?)/i,
+    };
   }
 
   apply(compiler) {
-    const { minifyOpts, options } = this;
-
-    const jsregex = options.test || /\.js($|\?)/i;
-    const commentsRegex = typeof options.comments === 'undefined' ? /@preserve|@licen(s|c)e/ : options.comments;
-
-    const useSourceMap = typeof options.sourceMap === 'undefined' ? !!compiler.options.devtool : options.sourceMap;
-
-    const _babel = this.options.babel || babel;
-    const _minifyPreset = this.options.minifyPreset || minifyPreset;
-    const parserOpts = this.options.parserOpts || {};
+    const { options } = this;
+    // if sourcemap is not set
+    options.sourceMap = getDefault(options.sourceMap, !!compiler.options.devtool);
 
     compiler.plugin('compilation', (compilation) => {
-      if (useSourceMap) {
+      if (options.sourceMap) {
         compilation.plugin('build-module', (module) => {
           module.useSourceMap = true;
         });
@@ -36,7 +48,7 @@ export default class BabelMinifyPlugin {
 
         compilation.additionalChunkAssets.forEach(file => files.push(file));
 
-        files.filter(file => jsregex.test(file)).forEach((file) => {
+        files.filter(file => options.jsregex.test(file)).forEach((file) => {
           try {
             const asset = compilation.assets[file];
 
@@ -48,7 +60,7 @@ export default class BabelMinifyPlugin {
             let input;
             let inputSourceMap;
 
-            if (useSourceMap) {
+            if (options.sourceMap) {
               if (asset.sourceAndMap) {
                 const sourceAndMap = asset.sourceAndMap();
                 inputSourceMap = sourceAndMap.map;
@@ -62,14 +74,14 @@ export default class BabelMinifyPlugin {
             }
 
             // do the transformation
-            const result = _babel.transform(input, {
-              parserOpts,
-              presets: [[_minifyPreset, minifyOpts]],
-              sourceMaps: useSourceMap,
+            const result = options.babel.transform(input, {
+              parserOpts: options.parserOpts,
+              presets: [[options.minifyPreset, options.minifierOpts]],
+              sourceMaps: options.sourceMap,
               babelrc: false,
               inputSourceMap,
               shouldPrintComment(contents) {
-                return shouldPrintComment(contents, commentsRegex);
+                return shouldPrintComment(contents, options.comments);
               },
             });
 
