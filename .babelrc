@@ -7,8 +7,10 @@
         "targets": {
           "node": "4.3"
         },
+        "include": [
+          "transform-async-to-generator"
+        ],
         "exclude": [
-          "transform-async-to-generator",
           "transform-regenerator"
         ]
       }
