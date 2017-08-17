@@ -1,37 +1,52 @@
 {
-  "name": "babili-webpack-plugin",
+  "name": "babel-minify-webpack-plugin",
   "version": "0.1.2",
-  "description": "Babili Plugin for Webpack",
-  "author": "boopathi",
+  "description": "babel-minify plugin for webpack",
+  "keywords": [
+    "babel",
+    "babel-minify",
+    "minify",
+    "webpack",
+    "webpack-plugin"
+  ],
+  "homepage": "https://github.com/webpack-contrib/babel-minify-webpack-plugin",
+  "bugs": {
+    "url": "https://github.com/webpack-contrib/babel-minify-webpack-plugin/issues"
+  },
   "license": "MIT",
-  "main": "dist/cjs.js",
+  "author": "boopathi",
   "files": [
     "dist"
   ],
+  "main": "dist/cjs.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webpack-contrib/babel-minify-webpack-plugin.git"
+  },
   "scripts": {
-    "build": "cross-env NODE_ENV=production babel src -d dist --ignore 'src/**/*.test.js'",
-    "watch": "babel src --out-dir lib --watch",
-    "lint": "eslint --cache src test",
-    "fix": "eslint src/ test/*.js --fix",
-    "test": "jest",
-    "webpack-defaults": "webpack-defaults",
-    "start": "npm run build -- -w",
     "appveyor:test": "npm run test",
-    "clean": "del-cli dist",
-    "lint-staged": "lint-staged",
     "prebuild": "npm run clean",
+    "build": "cross-env NODE_ENV=production babel src -d dist --ignore 'src/**/*.test.js'",
+    "clean": "del-cli dist",
+    "fix": "eslint src/ test/*.js --fix",
+    "lint": "eslint --cache src test",
+    "lint-staged": "lint-staged",
     "prepublish": "npm run build",
     "release": "standard-version",
     "security": "nsp check",
-    "test:watch": "jest --watch",
+    "start": "npm run build -- -w",
+    "test": "jest",
     "test:coverage": "jest --collectCoverageFrom='src/**/*.js' --coverage",
+    "test:watch": "jest --watch",
+    "travis:coverage": "npm run test:coverage -- --runInBand",
     "travis:lint": "npm run lint && npm run security",
     "travis:test": "npm run test -- --runInBand",
-    "travis:coverage": "npm run test:coverage -- --runInBand"
+    "webpack-defaults": "webpack-defaults"
   },
+  "pre-commit": "lint-staged",
   "dependencies": {
     "babel-core": "^6.24.1",
-    "babel-preset-babili": "^0.1.4",
+    "babel-preset-minify": "^0.2.0",
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
@@ -55,28 +70,12 @@
     "webpack": "^3.3.0",
     "webpack-defaults": "^1.5.0"
   },
-  "engines": {
-    "node": ">= 4.3 < 5.0.0 || >= 5.10"
-  },
   "peerDependencies": {
     "webpack": "^2.0.0 || ^3.0.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/webpack-contrib/babili-webpack-plugin.git"
+  "engines": {
+    "node": ">= 4.3 < 5.0.0 || >= 5.10"
   },
-  "bugs": {
-    "url": "https://github.com/webpack-contrib/babili-webpack-plugin/issues"
-  },
-  "homepage": "https://github.com/webpack-contrib/babili-webpack-plugin",
-  "keywords": [
-    "webpack",
-    "webpack-plugin",
-    "babel",
-    "babili",
-    "minify"
-  ],
-  "pre-commit": "lint-staged",
   "lint-staged": {
     "*.js": [
       "eslint --fix",

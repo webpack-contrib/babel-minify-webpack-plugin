@@ -1,27 +1,34 @@
+/* eslint-disable multiline-ternary, no-void */
 import babel from 'babel-core';
-import babiliPreset from 'babel-preset-babili';
+import babelPresetMinify from 'babel-preset-minify';
 import { SourceMapSource, RawSource } from 'webpack-sources';
 
-export default class BabiliPlugin {
-  constructor(babiliOpts = {}, options = {}) {
-    this.babiliOpts = babiliOpts;
-    this.options = options;
+function getDefault(actualValue, defaultValue) {
+  return actualValue !== void 0 ? actualValue : defaultValue;
+}
+
+export default class BabelMinifyPlugin {
+  constructor(minifyOpts = {}, pluginOpts = {}) {
+    this.options = {
+      parserOpts: pluginOpts.parserOpts || {},
+      minifyPreset: pluginOpts.minifyPreset || babelPresetMinify,
+      minifyOpts,
+      babel: pluginOpts.babel || babel,
+      comments: getDefault(pluginOpts.comments, /^\**!|@preserve|@license|@cc_on/),
+      // compiler.options.devtool overrides options.sourceMap if NOT set
+      // so we set it to void 0 as the default value
+      sourceMap: getDefault(pluginOpts.sourceMap, void 0),
+      jsregex: pluginOpts.test || /\.js($|\?)/i,
+    };
   }
 
   apply(compiler) {
-    const { babiliOpts, options } = this;
-
-    const jsregex = options.test || /\.js($|\?)/i;
-    const commentsRegex = typeof options.comments === 'undefined' ? /@preserve|@licen(s|c)e/ : options.comments;
-
-    const useSourceMap = typeof options.sourceMap === 'undefined' ? !!compiler.options.devtool : options.sourceMap;
-
-    const _babel = this.options.babel || babel;
-    const _babili = this.options.babili || babiliPreset;
-    const parserOpts = this.options.parserOpts || {};
+    const { options } = this;
+    // if sourcemap is not set
+    options.sourceMap = getDefault(options.sourceMap, !!compiler.options.devtool);
 
     compiler.plugin('compilation', (compilation) => {
-      if (useSourceMap) {
+      if (options.sourceMap) {
         compilation.plugin('build-module', (module) => {
           module.useSourceMap = true;
         });
@@ -36,51 +43,50 @@ export default class BabiliPlugin {
 
         compilation.additionalChunkAssets.forEach(file => files.push(file));
 
-        files
-          .filter(file => jsregex.test(file))
-          .forEach((file) => {
-            try {
-              const asset = compilation.assets[file];
+        files.filter(file => options.jsregex.test(file)).forEach((file) => {
+          try {
+            const asset = compilation.assets[file];
 
-              if (asset.__babilified) {
-                compilation.assets[file] = asset.__babilified;
-                return;
-              }
+            if (asset.__babelminified) {
+              compilation.assets[file] = asset.__babelminified;
+              return;
+            }
 
-              let input;
-              let inputSourceMap;
+            let input;
+            let inputSourceMap;
 
-              if (useSourceMap) {
-                if (asset.sourceAndMap) {
-                  const sourceAndMap = asset.sourceAndMap();
-                  inputSourceMap = sourceAndMap.map;
-                  input = sourceAndMap.source;
-                } else {
-                  inputSourceMap = asset.map();
-                  input = asset.source();
-                }
+            if (options.sourceMap) {
+              if (asset.sourceAndMap) {
+                const sourceAndMap = asset.sourceAndMap();
+                inputSourceMap = sourceAndMap.map;
+                input = sourceAndMap.source;
               } else {
+                inputSourceMap = asset.map();
                 input = asset.source();
               }
-
-              // do the transformation
-              const result = _babel.transform(input, {
-                parserOpts,
-                presets: [[_babili, babiliOpts]],
-                sourceMaps: useSourceMap,
-                babelrc: false,
-                inputSourceMap,
-                shouldPrintComment(contents) {
-                  return shouldPrintComment(contents, commentsRegex);
-                },
-              });
-
-              asset.__babilified = compilation.assets[file] =
-                (result.map ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap) : new RawSource(result.code));
-            } catch (e) {
-              compilation.errors.push(e);
+            } else {
+              input = asset.source();
             }
-          });
+
+            // do the transformation
+            const result = options.babel.transform(input, {
+              parserOpts: options.parserOpts,
+              presets: [[options.minifyPreset, options.minifyOpts]],
+              sourceMaps: options.sourceMap,
+              babelrc: false,
+              inputSourceMap,
+              shouldPrintComment(contents) {
+                return shouldPrintComment(contents, options.comments);
+              },
+            });
+
+            asset.__babelminified = compilation.assets[file] = result.map
+              ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap)
+              : new RawSource(result.code);
+          } catch (e) {
+            compilation.errors.push(e);
+          }
+        });
 
         callback();
       });
@@ -90,8 +96,11 @@ export default class BabiliPlugin {
 
 function shouldPrintComment(contents, checker) {
   switch (typeof checker) {
-    case 'function': return checker(contents);
-    case 'object': return checker.test(contents);
-    default: return !!checker;
+    case 'function':
+      return checker(contents);
+    case 'object':
+      return checker.test(contents);
+    default:
+      return !!checker;
   }
 }
