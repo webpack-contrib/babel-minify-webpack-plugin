@@ -1,29 +1,24 @@
+/* eslint-disable multiline-ternary, no-void */
 import babel from 'babel-core';
 import babelPresetMinify from 'babel-preset-minify';
 import { SourceMapSource, RawSource } from 'webpack-sources';
 
-// alias for undefined / void 0 :(
-// because of these eslint rules in webpack-defaults
-// 1. no-void
-// 2. no-undefined
-let undef;
-
 function getDefault(actualValue, defaultValue) {
-  return actualValue !== undef ? actualValue : defaultValue;
+  return actualValue !== void 0 ? actualValue : defaultValue;
 }
 
 export default class BabelMinifyPlugin {
-  constructor(minifierOpts = {}, pluginOpts = {}) {
+  constructor(minifyOpts = {}, pluginOpts = {}) {
     this.options = {
       parserOpts: pluginOpts.parserOpts || {},
       minifyPreset: pluginOpts.minifyPreset || babelPresetMinify,
-      minifierOpts,
+      minifyOpts,
       babel: pluginOpts.babel || babel,
       comments: getDefault(pluginOpts.comments, /^\**!|@preserve|@license|@cc_on/),
       // compiler.options.devtool overrides options.sourceMap if NOT set
-      // so we set it to undefined/void 0 as the default value
-      sourceMap: getDefault(pluginOpts.sourceMap, undef),
-      jsregex: pluginOpts.jsregex || /\.js($|\?)/i,
+      // so we set it to void 0 as the default value
+      sourceMap: getDefault(pluginOpts.sourceMap, void 0),
+      jsregex: pluginOpts.test || /\.js($|\?)/i,
     };
   }
 
@@ -76,7 +71,7 @@ export default class BabelMinifyPlugin {
             // do the transformation
             const result = options.babel.transform(input, {
               parserOpts: options.parserOpts,
-              presets: [[options.minifyPreset, options.minifierOpts]],
+              presets: [[options.minifyPreset, options.minifyOpts]],
               sourceMaps: options.sourceMap,
               babelrc: false,
               inputSourceMap,
@@ -85,15 +80,9 @@ export default class BabelMinifyPlugin {
               },
             });
 
-            // not a ternary because prettier puts test and consequent on different lines
-            // and webpack-defaults has a rule not to do the same :(
-            if (result.map) {
-              compilation.assets[file] = new SourceMapSource(result.code, file, result.map, input, inputSourceMap);
-            } else {
-              compilation.assets[file] = new RawSource(result.code);
-            }
-
-            asset.__babelminified = compilation.assets[file];
+            asset.__babelminified = compilation.assets[file] = result.map
+              ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap)
+              : new RawSource(result.code);
           } catch (e) {
             compilation.errors.push(e);
           }
