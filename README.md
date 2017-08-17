@@ -30,23 +30,23 @@ module.exports = {
   entry: //...,
   output: //...,
   plugins: [
-    new MinifyPlugin(minifyOptions, overrides)
+    new MinifyPlugin(minifyOpts, pluginOpts)
   ]
 }
 ```
 
 <h2 align="center">Options</h2>
 
-#### minifyOptions
+#### minifyOpts
 
-`minifyOptions` are passed on to babel-preset-minify. You can find a list of [all available options](https://github.com/babel/minify/tree/master/packages/babel-preset-minify#options) in the package directory.
+`minifyOpts` are passed on to babel-preset-minify. You can find a list of [all available options](https://github.com/babel/minify/tree/master/packages/babel-preset-minify#options) in the package directory.
 
 `Default: {}`
 
-#### Overrides
+#### pluginOpts
 
 + `test`: JS file extension regex. Default: `/\.js($|\?)/i`
-+ `comments`: Preserve Comments. Default: `/@preserve|@licen(s|c)e/`. falsy value to remove all comments. Accepts function, object with property test (regex), and values.
++ `comments`: Preserve Comments. Default: `/^\**!|@preserve|@license|@cc_on/`, falsy value to remove all comments. Accepts function, object with property test (regex), and values.
 + `sourceMap`: Default: uses [webpackConfig.devtool](https://webpack.js.org/configuration/devtool/). Set this to override that.
 + `parserOpts`: Configure babel with special parser options.
 + `babel`: Pass in a custom babel-core instead. `require("babel-core")`
