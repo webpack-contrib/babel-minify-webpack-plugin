@@ -1,12 +1,12 @@
 /* @license MIT */
-const a = require('./a');
-const b = require('./b');
+const moduleA = require('./a');
+const moduleB = require('./b');
 
 /* Hmm... */
 if (process.env.NODE_ENV === 'production') {
-  run(a, b);
+  run(moduleA, moduleB);
 } else {
-  run(b, a);
+  run(moduleB, moduleA);
 }
 
 /* @preserve Run function */
