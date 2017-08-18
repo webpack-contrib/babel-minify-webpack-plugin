@@ -25,7 +25,17 @@
   "env": {
     "test": {
       "presets": [
-        "env"
+        [
+          "env",
+          {
+            "exclude": [
+              "transform-regenerator"
+            ],
+            "include": [
+              "transform-async-to-generator"
+            ]
+          }
+        ]
       ],
       "plugins": [
         "transform-object-rest-spread"

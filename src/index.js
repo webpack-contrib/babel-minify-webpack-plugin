@@ -1,5 +1,5 @@
 /* eslint-disable multiline-ternary, no-void */
-import babel from 'babel-core';
+import { transform } from 'babel-core';
 import babelPresetMinify from 'babel-preset-minify';
 import { SourceMapSource, RawSource } from 'webpack-sources';
 
@@ -13,7 +13,7 @@ export default class BabelMinifyPlugin {
       parserOpts: pluginOpts.parserOpts || {},
       minifyPreset: pluginOpts.minifyPreset || babelPresetMinify,
       minifyOpts,
-      babel: pluginOpts.babel || babel,
+      babel: pluginOpts.babel || { transform },
       comments: getDefault(pluginOpts.comments, /^\**!|@preserve|@license|@cc_on/),
       // compiler.options.devtool overrides options.sourceMap if NOT set
       // so we set it to void 0 as the default value
