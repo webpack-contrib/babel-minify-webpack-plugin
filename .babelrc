@@ -7,10 +7,8 @@
         "targets": {
           "node": "4.3"
         },
-        "include": [
-          "transform-async-to-generator"
-        ],
         "exclude": [
+          "transform-async-to-generator",
           "transform-regenerator"
         ]
       }
@@ -27,7 +25,17 @@
   "env": {
     "test": {
       "presets": [
-        "env"
+        [
+          "env",
+          {
+            "exclude": [
+              "transform-regenerator"
+            ],
+            "include": [
+              "transform-async-to-generator"
+            ]
+          }
+        ]
       ],
       "plugins": [
         "transform-object-rest-spread"
