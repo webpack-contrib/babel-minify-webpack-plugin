@@ -1,4 +1,4 @@
-/* eslint-disable multiline-ternary, no-void */
+/* eslint-disable no-void */
 import { transform } from 'babel-core';
 import babelPresetMinify from 'babel-preset-minify';
 import { SourceMapSource, RawSource } from 'webpack-sources';
@@ -14,7 +14,10 @@ export default class BabelMinifyPlugin {
       minifyPreset: pluginOpts.minifyPreset || babelPresetMinify,
       minifyOpts,
       babel: pluginOpts.babel || { transform },
-      comments: getDefault(pluginOpts.comments, /^\**!|@preserve|@license|@cc_on/),
+      comments: getDefault(
+        pluginOpts.comments,
+        /^\**!|@preserve|@license|@cc_on/
+      ),
       // compiler.options.devtool overrides options.sourceMap if NOT set
       // so we set it to void 0 as the default value
       sourceMap: getDefault(pluginOpts.sourceMap, void 0),
@@ -25,7 +28,10 @@ export default class BabelMinifyPlugin {
   apply(compiler) {
     const { options } = this;
     // if sourcemap is not set
-    options.sourceMap = getDefault(options.sourceMap, !!compiler.options.devtool);
+    options.sourceMap = getDefault(
+      options.sourceMap,
+      !!compiler.options.devtool
+    );
 
     compiler.plugin('compilation', (compilation) => {
       if (options.sourceMap) {
@@ -38,12 +44,12 @@ export default class BabelMinifyPlugin {
         const files = [];
 
         chunks.forEach((chunk) => {
-          chunk.files.forEach(file => files.push(file));
+          chunk.files.forEach((file) => files.push(file));
         });
 
-        compilation.additionalChunkAssets.forEach(file => files.push(file));
+        compilation.additionalChunkAssets.forEach((file) => files.push(file));
 
-        files.filter(file => options.jsregex.test(file)).forEach((file) => {
+        files.filter((file) => options.jsregex.test(file)).forEach((file) => {
           try {
             const asset = compilation.assets[file];
 
@@ -81,7 +87,13 @@ export default class BabelMinifyPlugin {
             });
 
             asset.__babelminified = compilation.assets[file] = result.map
-              ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap)
+              ? new SourceMapSource(
+                  result.code,
+                  file,
+                  result.map,
+                  input,
+                  inputSourceMap
+                )
               : new RawSource(result.code);
           } catch (e) {
             compilation.errors.push(e);

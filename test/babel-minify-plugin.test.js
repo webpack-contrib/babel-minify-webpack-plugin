@@ -30,7 +30,7 @@ describe('babel-minify-webpack-plugin', () => {
     beforeAll(async () => run({ devtool: 'sourcemap' }));
 
     it('should have sourcemaps with correct filenames', () => {
-      const src = sources().map(s => s.replace('webpack:///', ''));
+      const src = sources().map((s) => s.replace('webpack:///', ''));
       expect(src).toContain('test/resources/app.js');
       expect(src).toContain('test/resources/a.js');
       expect(src).toContain('test/resources/b.js');
@@ -147,7 +147,11 @@ function isMinified(code) {
           visitor: {
             ReferencedIdentifier(path) {
               const { name } = path.node;
-              if (name.length > 2 && ['undefined', 'arguments'].indexOf(name) < 0 && !path.scope.hasGlobal(name)) {
+              if (
+                name.length > 2 &&
+                ['undefined', 'arguments'].indexOf(name) < 0 &&
+                !path.scope.hasGlobal(name)
+              ) {
                 minified = false;
                 path.stop();
               }
