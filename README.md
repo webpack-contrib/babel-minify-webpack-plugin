@@ -109,8 +109,8 @@ You can also use [babel-loader](https://github.com/babel/babel-loader) for webpa
 [chat]: https://img.shields.io/badge/gitter-webpack%2Fwebpack-brightgreen.svg
 [chat-url]: https://gitter.im/webpack/webpack
 
-[test]: https://travis-ci.org/webpack-contrib/babel-minify-webpack-plugin.svg?branch=master
-[test-url]: https://travis-ci.org/webpack-contrib/babel-minify-webpack-plugin
+[test]: https://circleci.com/gh/webpack-contrib/babel-minify-webpack-plugin.svg?style=svg
+[test-url]: https://circleci.com/gh/webpack-contrib/babel-minify-webpack-plugin
 
 [cover]: https://codecov.io/gh/webpack-contrib/babel-minify-webpack-plugin/branch/master/graph/badge.svg
 [cover-url]: https://codecov.io/gh/webpack-contrib/babel-minify-webpack-plugin
