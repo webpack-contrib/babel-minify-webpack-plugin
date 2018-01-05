@@ -42,6 +42,30 @@ describe('babel-minify-webpack-plugin', () => {
       rimraf.sync(buildDir);
     });
 
+    it('should accept a regex as test', async () => {
+      await run({
+        test: /\.js($|\?)/i,
+      });
+      const output = getFile('bundle.js');
+      expect(isMinified(output)).toBe(true);
+    });
+
+    it('should accept a regex as include', async () => {
+      await run({
+        include: /\.js($|\?)/i,
+      });
+      const output = getFile('bundle.js');
+      expect(isMinified(output)).toBe(true);
+    });
+
+    it('should accept a regex as exclude', async () => {
+      await run({
+        exclude: /\.js($|\?)/i,
+      });
+      const output = getFile('bundle.js');
+      expect(isMinified(output)).toBe(false);
+    });
+
     it('should disable sourcemap when devtool is not present', async () => {
       await run({ devtool: undefined });
       expect(isExists(path.join(buildDir, 'bundle.js'))).toEqual(true);

@@ -2,6 +2,7 @@
 import { transform } from 'babel-core';
 import babelPresetMinify from 'babel-preset-minify';
 import { SourceMapSource, RawSource } from 'webpack-sources';
+import ModuleFilenameHelpers from 'webpack/lib/ModuleFilenameHelpers';
 
 function getDefault(actualValue, defaultValue) {
   return actualValue !== void 0 ? actualValue : defaultValue;
@@ -18,7 +19,9 @@ export default class BabelMinifyPlugin {
       // compiler.options.devtool overrides options.sourceMap if NOT set
       // so we set it to void 0 as the default value
       sourceMap: getDefault(pluginOpts.sourceMap, void 0),
-      jsregex: pluginOpts.test || /\.js($|\?)/i,
+      test: pluginOpts.test || /\.js($|\?)/i,
+      include: pluginOpts.include || void 0,
+      exclude: pluginOpts.exclude || void 0,
     };
   }
 
@@ -35,58 +38,53 @@ export default class BabelMinifyPlugin {
       }
 
       compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
-        const files = [];
+        chunks.reduce((acc, chunk) => acc.concat(chunk.files || []), [])
+          .concat(compilation.additionalChunkAssets || [])
+          .filter(ModuleFilenameHelpers.matchObject.bind(null, options))
+          .forEach((file) => {
+            try {
+              const asset = compilation.assets[file];
 
-        chunks.forEach((chunk) => {
-          chunk.files.forEach(file => files.push(file));
-        });
+              if (asset.__babelminified) {
+                compilation.assets[file] = asset.__babelminified;
+                return;
+              }
 
-        compilation.additionalChunkAssets.forEach(file => files.push(file));
+              let input;
+              let inputSourceMap;
 
-        files.filter(file => options.jsregex.test(file)).forEach((file) => {
-          try {
-            const asset = compilation.assets[file];
-
-            if (asset.__babelminified) {
-              compilation.assets[file] = asset.__babelminified;
-              return;
-            }
-
-            let input;
-            let inputSourceMap;
-
-            if (options.sourceMap) {
-              if (asset.sourceAndMap) {
-                const sourceAndMap = asset.sourceAndMap();
-                inputSourceMap = sourceAndMap.map;
-                input = sourceAndMap.source;
+              if (options.sourceMap) {
+                if (asset.sourceAndMap) {
+                  const sourceAndMap = asset.sourceAndMap();
+                  inputSourceMap = sourceAndMap.map;
+                  input = sourceAndMap.source;
+                } else {
+                  inputSourceMap = asset.map();
+                  input = asset.source();
+                }
               } else {
-                inputSourceMap = asset.map();
                 input = asset.source();
               }
-            } else {
-              input = asset.source();
+
+              // do the transformation
+              const result = options.babel.transform(input, {
+                parserOpts: options.parserOpts,
+                presets: [[options.minifyPreset, options.minifyOpts]],
+                sourceMaps: options.sourceMap,
+                babelrc: false,
+                inputSourceMap,
+                shouldPrintComment(contents) {
+                  return shouldPrintComment(contents, options.comments);
+                },
+              });
+
+              asset.__babelminified = compilation.assets[file] = result.map
+                ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap)
+                : new RawSource(result.code);
+            } catch (e) {
+              compilation.errors.push(e);
             }
-
-            // do the transformation
-            const result = options.babel.transform(input, {
-              parserOpts: options.parserOpts,
-              presets: [[options.minifyPreset, options.minifyOpts]],
-              sourceMaps: options.sourceMap,
-              babelrc: false,
-              inputSourceMap,
-              shouldPrintComment(contents) {
-                return shouldPrintComment(contents, options.comments);
-              },
-            });
-
-            asset.__babelminified = compilation.assets[file] = result.map
-              ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap)
-              : new RawSource(result.code);
-          } catch (e) {
-            compilation.errors.push(e);
-          }
-        });
+          });
 
         callback();
       });
