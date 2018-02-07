@@ -1,28 +1,16 @@
 {
   "name": "babel-minify-webpack-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "babel-minify plugin for webpack",
-  "keywords": [
-    "babel",
-    "babel-minify",
-    "minify",
-    "webpack",
-    "webpack-plugin"
-  ],
-  "homepage": "https://github.com/webpack-contrib/babel-minify-webpack-plugin",
-  "bugs": {
-    "url": "https://github.com/webpack-contrib/babel-minify-webpack-plugin/issues"
-  },
+  "author": "boopathi (@boopathi)",
   "license": "MIT",
-  "author": "boopathi",
+  "engines": {
+    "node": ">= 4.3 < 5.0.0 || >= 5.10"
+  },
+  "main": "dist/cjs.js",
   "files": [
     "dist"
   ],
-  "main": "dist/cjs.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/webpack-contrib/babel-minify-webpack-plugin.git"
-  },
   "scripts": {
     "appveyor:test": "npm run test",
     "prebuild": "npm run clean",
@@ -31,7 +19,7 @@
     "fix": "eslint src/ test/*.js --fix",
     "lint": "eslint --cache src test",
     "lint-staged": "lint-staged",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "release": "standard-version",
     "security": "nsp check",
     "start": "npm run build -- -w",
@@ -43,7 +31,6 @@
     "travis:test": "npm run test -- --runInBand",
     "webpack-defaults": "webpack-defaults"
   },
-  "pre-commit": "lint-staged",
   "dependencies": {
     "babel-core": "^6.24.1",
     "babel-preset-minify": "^0.3.0",
@@ -73,9 +60,17 @@
   "peerDependencies": {
     "webpack": "^2.0.0 || ^3.0.0"
   },
-  "engines": {
-    "node": ">= 4.3 < 5.0.0 || >= 5.10"
-  },
+  "keywords": [
+    "babel",
+    "babel-minify",
+    "minify",
+    "webpack",
+    "webpack-plugin"
+  ],
+  "repository": "https://github.com/webpack-contrib/babel-minify-webpack-plugin.git",
+  "bugs": "https://github.com/webpack-contrib/babel-minify-webpack-plugin/issues",
+  "homepage": "https://github.com/webpack-contrib/babel-minify-webpack-plugin",
+  "pre-commit": "lint-staged",
   "lint-staged": {
     "*.js": [
       "eslint --fix",
