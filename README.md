@@ -49,8 +49,8 @@ module.exports = {
 + `comments`: Preserve Comments. Default: `/^\**!|@preserve|@license|@cc_on/`, falsy value to remove all comments. Accepts function, object with property test (regex), and values.
 + `sourceMap`: Configure a sourcemap style. Default: [webpackConfig.devtool](https://webpack.js.org/configuration/devtool/)
 + `parserOpts`: Configure babel with special parser options.
-+ `babel`: Pass in a custom babel-core instead. Default: `require("babel-core")`
-+ `minifyPreset`: Pass in a custom minify preset instead. Default: `require("babel-preset-minify")`
++ `babel`: Pass in a custom `babel-core` instead. Default: `require("babel-core")`
++ `minifyPreset`: Pass in a custom `babel-minify` preset instead. Default: `require("babel-preset-minify")`
 
 <h2 align="center">Why</h2>
 
