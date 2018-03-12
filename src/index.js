@@ -58,10 +58,10 @@ function optimizeChunkAssets(compilation, options, chunks) {
     });
 }
 
-function compilationFn(useHooks, compilation) {
+function compilationFn(compilation) {
   const { options, plugin } = this;
 
-  if (useHooks) {
+  if (compilation.hooks) {
     if (options.sourceMap) {
       compilation.hooks
         .buildModule
@@ -115,9 +115,9 @@ export default class BabelMinifyPlugin {
     if (compiler.hooks) {
       const { compilation } = compiler.hooks;
 
-      compilation.tap(this.plugin, compilationFn.bind(this, true));
+      compilation.tap(this.plugin, compilationFn.bind(this));
     } else {
-      compiler.plugin('compilation', compilationFn.bind(this, false));
+      compiler.plugin('compilation', compilationFn.bind(this));
     }
   }
 }
