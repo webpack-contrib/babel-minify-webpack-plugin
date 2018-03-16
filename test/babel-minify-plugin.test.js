@@ -155,7 +155,7 @@ function getConfig(opts = {}) {
       path: path.join(__dirname, 'build'),
     },
     plugins: [new BabelMinifyPlugin({}, opts)],
-    devtool: opts.devtool ? opts.devtool : undefined,
+    devtool: opts.devtool ? opts.devtool : false,
   };
 }
 
