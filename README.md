@@ -11,9 +11,13 @@
     <img width="200" height="200" vspace="" hspace="25"
       src="https://cdn.rawgit.com/webpack/media/e7485eb2/logo/icon.svg">
   </a>
-  <h1>Babel Minify Webpack Plugin</h1>
+  <h1>Babel Minify Webpack Plugin (beta)</h1>
   <p>A Webpack Plugin for <a href="https://github.com/babel/minify">babel-minify</a> - A babel based minifier<p>
 </div>
+
+<h2 align="center">Experimental</h2>
+
+babel-minify is an experimental project that attempts to use Babel's toolchain to do minification. It's currently in 0.x, so we don't recommend using it in production.
 
 <h2 align="center">Install</h2>
 
