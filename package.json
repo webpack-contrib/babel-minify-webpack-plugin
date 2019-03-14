@@ -8,8 +8,10 @@
     "node": ">= 4.3 < 5.0.0 || >= 5.10"
   },
   "main": "dist/cjs.js",
+  "types": "types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
   "scripts": {
     "start": "npm run build -- -w",
@@ -36,6 +38,8 @@
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
+    "@types/babel-core": "*",
+    "@types/webpack": "*",
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
