@@ -1,18 +1,19 @@
 /* eslint-disable multiline-ternary, no-void */
-import { transform } from 'babel-core';
-import babelPresetMinify from 'babel-preset-minify';
-import { SourceMapSource, RawSource } from 'webpack-sources';
-import ModuleFilenameHelpers from 'webpack/lib/ModuleFilenameHelpers';
+import { transform } from "@babel/core";
+import babelPresetMinify from "babel-preset-minify";
+import { SourceMapSource, RawSource } from "webpack-sources";
+import ModuleFilenameHelpers from "webpack/lib/ModuleFilenameHelpers";
 
 function getDefault(actualValue, defaultValue) {
   return actualValue !== void 0 ? actualValue : defaultValue;
 }
 
 function optimizeChunkAssets(compilation, options, chunks) {
-  chunks.reduce((acc, chunk) => acc.concat(chunk.files || []), [])
+  chunks
+    .reduce((acc, chunk) => acc.concat(chunk.files || []), [])
     .concat(compilation.additionalChunkAssets || [])
     .filter(ModuleFilenameHelpers.matchObject.bind(null, options))
-    .forEach((file) => {
+    .forEach(file => {
       try {
         const asset = compilation.assets[file];
 
@@ -46,11 +47,17 @@ function optimizeChunkAssets(compilation, options, chunks) {
           inputSourceMap,
           shouldPrintComment(contents) {
             return shouldPrintComment(contents, options.comments);
-          },
+          }
         });
 
         asset.__babelminified = compilation.assets[file] = result.map
-          ? new SourceMapSource(result.code, file, result.map, input, inputSourceMap)
+          ? new SourceMapSource(
+              result.code,
+              file,
+              result.map,
+              input,
+              inputSourceMap
+            )
           : new RawSource(result.code);
       } catch (e) {
         compilation.errors.push(e);
@@ -63,25 +70,26 @@ function compilationFn(compilation) {
 
   if (compilation.hooks) {
     if (options.sourceMap) {
-      compilation.hooks
-        .buildModule
-        .tap(plugin, (module) => { module.useSourceMap = true; });
-    }
-
-    compilation.hooks
-      .optimizeChunkAssets
-      .tapAsync(plugin, (chunks, callback) => {
-        optimizeChunkAssets(compilation, options, chunks);
-        callback();
-      });
-  } else {
-    if (options.sourceMap) {
-      compilation.plugin('build-module', (module) => {
+      compilation.hooks.buildModule.tap(plugin, module => {
         module.useSourceMap = true;
       });
     }
 
-    compilation.plugin('optimize-chunk-assets', (chunks, callback) => {
+    compilation.hooks.optimizeChunkAssets.tapAsync(
+      plugin,
+      (chunks, callback) => {
+        optimizeChunkAssets(compilation, options, chunks);
+        callback();
+      }
+    );
+  } else {
+    if (options.sourceMap) {
+      compilation.plugin("build-module", module => {
+        module.useSourceMap = true;
+      });
+    }
+
+    compilation.plugin("optimize-chunk-assets", (chunks, callback) => {
       optimizeChunkAssets(compilation, options, chunks);
       callback();
     });
@@ -90,43 +98,49 @@ function compilationFn(compilation) {
 
 export default class BabelMinifyPlugin {
   constructor(minifyOpts = {}, pluginOpts = {}) {
-    this.plugin = { name: 'BabelMinifyPlugin' };
+    this.plugin = { name: "BabelMinifyPlugin" };
 
     this.options = {
       parserOpts: pluginOpts.parserOpts || {},
       minifyPreset: pluginOpts.minifyPreset || babelPresetMinify,
       minifyOpts,
       babel: pluginOpts.babel || { transform },
-      comments: getDefault(pluginOpts.comments, /^\**!|@preserve|@license|@cc_on/),
+      comments: getDefault(
+        pluginOpts.comments,
+        /^\**!|@preserve|@license|@cc_on/
+      ),
       // compiler.options.devtool overrides options.sourceMap if NOT set
       // so we set it to void 0 as the default value
       sourceMap: getDefault(pluginOpts.sourceMap, void 0),
       test: pluginOpts.test || /\.js($|\?)/i,
       include: pluginOpts.include || void 0,
-      exclude: pluginOpts.exclude || void 0,
+      exclude: pluginOpts.exclude || void 0
     };
   }
 
   apply(compiler) {
     const { options } = this;
     // if sourcemap is not set
-    options.sourceMap = getDefault(options.sourceMap, !!compiler.options.devtool);
+    options.sourceMap = getDefault(
+      options.sourceMap,
+      !!compiler.options.devtool
+    );
 
     if (compiler.hooks) {
       const { compilation } = compiler.hooks;
 
       compilation.tap(this.plugin, compilationFn.bind(this));
     } else {
-      compiler.plugin('compilation', compilationFn.bind(this));
+      compiler.plugin("compilation", compilationFn.bind(this));
     }
   }
 }
 
 function shouldPrintComment(contents, checker) {
   switch (typeof checker) {
-    case 'function':
+    case "function":
       return checker(contents);
-    case 'object':
+    case "object":
       return checker.test(contents);
     default:
       return !!checker;

@@ -5,7 +5,7 @@
   "author": "boopathi (@boopathi)",
   "license": "MIT",
   "engines": {
-    "node": ">= 4.3 < 5.0.0 || >= 5.10"
+    "node": ">= 6.9.0"
   },
   "main": "dist/cjs.js",
   "files": [
@@ -16,7 +16,7 @@
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production babel src -d dist --ignore 'src/**/*.test.js'",
     "clean": "del-cli dist",
-    "lint": "eslint --cache src test",
+    "lint": "eslint --cache src",
     "lint-staged": "lint-staged",
     "prepare": "npm run build",
     "release": "standard-version",
@@ -28,36 +28,37 @@
     "travis:coverage": "npm run test:coverage -- --runInBand",
     "travis:lint": "npm run lint && npm run security",
     "travis:test": "npm run test -- --runInBand",
-    "defaults": "webpack-defaults"
+    "defaults": "webpack-defaults",
+    "webpack-defaults": "webpack-defaults"
   },
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-preset-minify": "^0.3.0",
-    "webpack-sources": "^1.0.1"
+    "@babel/core": "^7.7.7",
+    "babel-preset-minify": "^0.5.1",
+    "webpack-sources": "^1.4.3"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-jest": "^20.0.3",
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-env": "^1.5.1",
-    "cross-env": "^5.0.1",
-    "del-cli": "^1.1.0",
-    "eslint": "^4.1.1",
-    "eslint-config-webpack": "^1.2.5",
-    "eslint-plugin-import": "^2.7.0",
-    "jest": "^20.0.4",
-    "lint-staged": "^4.0.1",
+    "@babel/cli": "^7.7.7",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@webpack-contrib/eslint-config-webpack": "^3.0.0",
+    "babel-jest": "^24.9.0",
+    "cross-env": "^6.0.3",
+    "del-cli": "^3.0.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.19.1",
+    "jest": "^24.9.0",
+    "jest-environment-node": "^24.9.0",
+    "lint-staged": "^9.5.0",
     "nsp": "^2.6.3",
     "pre-commit": "^1.2.2",
-    "rimraf": "^2.6.1",
-    "source-map": "^0.5.6",
-    "standard-version": "^4.2.0",
-    "webpack": "^3.3.0",
+    "rimraf": "^3.0.0",
+    "source-map": "^0.7.3",
+    "standard-version": "^7.0.1",
+    "webpack": "^4.41.5",
     "webpack-defaults": "^1.5.0"
   },
   "peerDependencies": {
-    "webpack": "^2.0.0 || ^3.0.0 || ^4.0.0"
+    "webpack": "^4.41.5.0"
   },
   "keywords": [
     "babel",

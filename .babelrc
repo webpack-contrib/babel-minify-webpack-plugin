@@ -1,45 +1,28 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
-        "useBuiltIns": true,
         "targets": {
           "node": "4.3"
         },
-        "exclude": [
-          "transform-async-to-generator",
-          "transform-regenerator"
-        ]
+        "exclude": ["transform-async-to-generator", "transform-regenerator"]
       }
     ]
   ],
-  "plugins": [
-    [
-      "transform-object-rest-spread",
-      {
-        "useBuiltIns": true
-      }
-    ]
-  ],
+  "plugins": [["@babel/plugin-proposal-object-rest-spread"]],
   "env": {
     "test": {
       "presets": [
         [
-          "env",
+          "@babel/preset-env",
           {
-            "exclude": [
-              "transform-regenerator"
-            ],
-            "include": [
-              "transform-async-to-generator"
-            ]
+            "exclude": ["transform-regenerator"],
+            "include": ["transform-async-to-generator"]
           }
         ]
       ],
-      "plugins": [
-        "transform-object-rest-spread"
-      ]
+      "plugins": ["@babel/plugin-proposal-object-rest-spread"]
     }
   }
 }

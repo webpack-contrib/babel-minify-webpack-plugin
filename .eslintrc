@@ -1,5 +1,5 @@
 {
-  "extends": "webpack",
+  "extends": "@webpack-contrib/eslint-config-webpack",
   "rules": {
     "consistent-return": 1,
     "no-param-reassign": 1,
