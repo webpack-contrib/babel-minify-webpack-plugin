@@ -1,3 +1,7 @@
+DEPREACTED due to lack of support/bug fixes/ new features, project abandoned, please migrate on https://github.com/webpack-contrib/terser-webpack-plugin
+
+----
+
 [![npm][npm]][npm-url]
 [![deps][deps]][deps-url]
 [![test][test]][test-url]
